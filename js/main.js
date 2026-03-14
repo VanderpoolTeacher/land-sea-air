@@ -1,4 +1,5 @@
-import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, STATES } from './config.js';
+import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, STATES, STARTING_CREDITS } from './config.js';
+import { createMap } from './map.js';
 
 // --- Game State ---
 const game = {
@@ -64,6 +65,24 @@ function render() {
   // TODO: draw lanes, towers, enemies, projectiles, HUD elements on canvas
 }
 
+// --- Game Initialization ---
+function initGame() {
+  const mapData = createMap();
+  game.paths = mapData.paths;
+  game.towerSlots = mapData.towerSlots;
+  game.buildings = mapData.buildings;
+  game.towers = [];
+  game.enemies = [];
+  game.projectiles = [];
+  game.particles = [];
+  game.credits = STARTING_CREDITS;
+  game.currentWave = 0;
+  game.selectedSlot = null;
+  game.state = STATES.PLACEMENT;
+  document.getElementById('start-wave-btn').style.display = '';
+  updateHUD();
+}
+
 // --- HUD ---
 function updateHUD() {
   document.getElementById('wave-counter').textContent = `Wave ${game.currentWave}/10`;
@@ -74,9 +93,7 @@ function updateHUD() {
 function bindUI() {
   document.getElementById('start-game-btn').addEventListener('click', () => {
     document.getElementById('menu-screen').style.display = 'none';
-    game.state = STATES.PLACEMENT;
-    document.getElementById('start-wave-btn').style.display = '';
-    updateHUD();
+    initGame();
   });
 
   document.getElementById('start-wave-btn').addEventListener('click', () => {
