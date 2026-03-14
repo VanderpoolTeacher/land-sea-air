@@ -1,8 +1,10 @@
-import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, STATES, STARTING_CREDITS, COSTS } from './config.js';
+import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, STATES, STARTING_CREDITS, COSTS, WAVES } from './config.js';
 import { createMap } from './map.js';
 import { renderFrame } from './renderer.js';
 import { createTower, upgradeTower, repairTower, getUpgradeCost } from './entities/tower.js';
+import { updateEnemy } from './entities/enemy.js';
 import { initInput } from './input.js';
+import { createWaveState, startWave, updateWave, isWaveComplete } from './systems/wave.js';
 
 // --- Game State ---
 const game = {
@@ -53,7 +55,54 @@ function gameLoop(timestamp) {
 
 function update(dt) {
   if (game.state === STATES.WAVE) {
-    // TODO: update wave spawning, enemies, towers, projectiles, combat
+    const wave = WAVES[game.currentWave];
+    updateWave(game.waveState, dt, game.paths, game.enemies, wave.hpMod, wave.speedMod, wave.spawnRate);
+
+    for (const enemy of game.enemies) {
+      updateEnemy(enemy, dt, game.towers, game.buildings);
+    }
+
+    // Award bounties for dead enemies
+    for (const enemy of game.enemies) {
+      if (!enemy.alive && !enemy.bountyClaimed) {
+        game.credits += enemy.bounty;
+        enemy.bountyClaimed = true;
+      }
+    }
+
+    // Remove dead towers from slots
+    for (const tower of game.towers) {
+      if (tower.hp <= 0) {
+        tower.slot.tower = null;
+      }
+    }
+    game.towers = game.towers.filter(t => t.hp > 0);
+
+    // Clean up dead enemies (keep those attacking buildings)
+    game.enemies = game.enemies.filter(e => e.alive || e.attackingBuilding);
+
+    // Check lose condition
+    if (game.buildings.every(b => !b.alive)) {
+      game.state = STATES.LOSE;
+      showEndScreen('Defeat!', 'All resource buildings were destroyed.');
+      return;
+    }
+
+    // Check wave complete
+    if (isWaveComplete(game.waveState, game.enemies)) {
+      game.enemies = [];
+      game.currentWave++;
+
+      if (game.currentWave >= WAVES.length) {
+        game.state = STATES.WIN;
+        showEndScreen('Victory!', 'You survived all 10 waves!');
+      } else {
+        game.state = STATES.WAVE_END;
+        showWaveEndScreen();
+      }
+    }
+
+    updateHUD();
   }
 }
 
@@ -76,6 +125,7 @@ function initGame() {
   game.credits = STARTING_CREDITS;
   game.currentWave = 0;
   game.selectedSlot = null;
+  game.waveState = createWaveState();
   game.state = STATES.PLACEMENT;
   document.getElementById('start-wave-btn').style.display = '';
   updateHUD();
@@ -97,15 +147,20 @@ function bindUI() {
   document.getElementById('start-wave-btn').addEventListener('click', () => {
     if (game.state === STATES.PLACEMENT) {
       game.state = STATES.WAVE;
+      hideTowerPanel();
       document.getElementById('start-wave-btn').style.display = 'none';
-      // TODO: start wave spawning
+      startWave(game.waveState, game.currentWave);
     }
   });
 
   document.getElementById('continue-btn').addEventListener('click', () => {
     document.getElementById('wave-end-screen').style.display = 'none';
+    game.enemies = [];
+    game.projectiles = [];
+    game.particles = [];
     game.state = STATES.PLACEMENT;
     document.getElementById('start-wave-btn').style.display = '';
+    updateHUD();
   });
 
   document.getElementById('restart-btn').addEventListener('click', () => {
@@ -113,6 +168,24 @@ function bindUI() {
     document.getElementById('menu-screen').style.display = 'flex';
     game.state = STATES.MENU;
   });
+}
+
+// --- End / Wave-End Screens ---
+function showEndScreen(title, info) {
+  document.getElementById('end-title').textContent = title;
+  document.getElementById('end-info').textContent = info;
+  document.getElementById('end-screen').style.display = 'flex';
+}
+
+function showWaveEndScreen() {
+  const survivingBuildings = game.buildings.filter(b => b.alive).length;
+  const income = 30 + survivingBuildings * 10;
+  game.credits += income;
+
+  document.getElementById('wave-end-title').textContent = `Wave ${game.currentWave} Complete!`;
+  document.getElementById('wave-end-info').textContent = `Income: +${income} credits (${survivingBuildings} buildings alive)`;
+  document.getElementById('wave-end-screen').style.display = 'flex';
+  updateHUD();
 }
 
 // --- Tower Panel ---
