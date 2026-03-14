@@ -1,5 +1,6 @@
 import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, STATES, STARTING_CREDITS } from './config.js';
 import { createMap } from './map.js';
+import { renderFrame } from './renderer.js';
 
 // --- Game State ---
 const game = {
@@ -55,14 +56,9 @@ function update(dt) {
 }
 
 function render() {
-  const ctx = game.ctx;
-  ctx.clearRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-
-  // Draw background
-  ctx.fillStyle = '#f5f0e8';
-  ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-
-  // TODO: draw lanes, towers, enemies, projectiles, HUD elements on canvas
+  game.ctx.save();
+  renderFrame(game.ctx, game);
+  game.ctx.restore();
 }
 
 // --- Game Initialization ---
