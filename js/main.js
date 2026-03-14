@@ -5,6 +5,7 @@ import { createTower, upgradeTower, repairTower, getUpgradeCost } from './entiti
 import { updateEnemy } from './entities/enemy.js';
 import { initInput } from './input.js';
 import { createWaveState, startWave, updateWave, isWaveComplete } from './systems/wave.js';
+import { updateCombat, updateParticles } from './systems/combat.js';
 
 // --- Game State ---
 const game = {
@@ -61,6 +62,9 @@ function update(dt) {
     for (const enemy of game.enemies) {
       updateEnemy(enemy, dt, game.towers, game.buildings);
     }
+
+    updateCombat(dt, game.towers, game.enemies, game.projectiles, game.particles);
+    updateParticles(dt, game.particles);
 
     // Award bounties for dead enemies
     for (const enemy of game.enemies) {
