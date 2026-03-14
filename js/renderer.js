@@ -66,6 +66,20 @@ export function renderFrame(ctx, game) {
   for (const p of game.particles) {
     drawParticle(ctx, p);
   }
+
+  // Lane damage overlay for destroyed buildings
+  if (game.state === 'WAVE' || game.state === 'PLACEMENT' || game.state === 'WAVE_END') {
+    for (const [key, lane] of Object.entries(LANES)) {
+      const bld = game.buildings.find(b => b.domain === key);
+      if (bld && !bld.alive) {
+        ctx.fillStyle = COLORS.healthRed;
+        ctx.globalAlpha = 0.15;
+        roundedRect(ctx, LANE_MARGIN_LEFT, lane.y, LANE_WIDTH, LANE_HEIGHT, 10);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+      }
+    }
+  }
 }
 
 // --- Lane background ---
