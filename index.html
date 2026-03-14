@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Land, Sea, and Air</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+
+    <!-- HUD Overlay -->
+    <div id="hud">
+      <span id="wave-counter">Wave 0/10</span>
+      <span id="credits-display">Credits: 100</span>
+      <button id="start-wave-btn" class="hud-btn" style="display:none;">Start Wave</button>
+    </div>
+
+    <!-- Tower Action Panel (shown on tower/slot click) -->
+    <div id="tower-panel" class="panel" style="display:none;">
+      <div id="panel-title">Tower</div>
+      <div id="panel-info"></div>
+      <div id="panel-actions"></div>
+    </div>
+
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="overlay">
+      <h1>Land, Sea, and Air</h1>
+      <p>A Tower Defense Strategy Game</p>
+      <button id="start-game-btn" class="menu-btn">Start Game</button>
+    </div>
+
+    <!-- Wave End Screen -->
+    <div id="wave-end-screen" class="overlay" style="display:none;">
+      <h2 id="wave-end-title">Wave Complete!</h2>
+      <p id="wave-end-info"></p>
+      <button id="continue-btn" class="menu-btn">Continue</button>
+    </div>
+
+    <!-- Win/Lose Screen -->
+    <div id="end-screen" class="overlay" style="display:none;">
+      <h2 id="end-title"></h2>
+      <p id="end-info"></p>
+      <button id="restart-btn" class="menu-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

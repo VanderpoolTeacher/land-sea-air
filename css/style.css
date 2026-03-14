@@ -1,0 +1,177 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #3e2723;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: Georgia, 'Times New Roman', serif;
+  overflow: hidden;
+}
+
+#game-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  aspect-ratio: 16 / 9;
+}
+
+#game-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* --- HUD Bar --- */
+#hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 20px;
+  pointer-events: none;
+}
+
+#hud > * {
+  pointer-events: auto;
+}
+
+#wave-counter, #credits-display {
+  color: #f5f0e8;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+#credits-display {
+  color: #ffc107;
+}
+
+.hud-btn {
+  margin-left: auto;
+  padding: 8px 20px;
+  background: #5d4037;
+  color: #f5f0e8;
+  border: 2px solid #8b7355;
+  border-radius: 8px;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.hud-btn:hover {
+  background: #795548;
+}
+
+/* --- Tower Panel --- */
+.panel {
+  position: absolute;
+  background: #f5f0e8;
+  border: 3px solid #8b7355;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+#panel-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3e2723;
+  margin-bottom: 8px;
+}
+
+#panel-info {
+  font-size: 14px;
+  color: #5d4037;
+  margin-bottom: 12px;
+}
+
+#panel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panel-btn {
+  padding: 6px 12px;
+  background: #8b7355;
+  color: #f5f0e8;
+  border: none;
+  border-radius: 6px;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.panel-btn:hover {
+  background: #a1887f;
+}
+
+.panel-btn:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+}
+
+/* --- Overlay Screens (Menu, Wave End, Win/Lose) --- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(62, 39, 35, 0.9);
+  color: #f5f0e8;
+  z-index: 20;
+}
+
+.overlay h1 {
+  font-size: 48px;
+  margin-bottom: 12px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.overlay h2 {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.overlay p {
+  font-size: 20px;
+  margin-bottom: 24px;
+  color: #d7ccc8;
+}
+
+.menu-btn {
+  padding: 14px 40px;
+  background: #8b7355;
+  color: #f5f0e8;
+  border: 3px solid #d4c5a0;
+  border-radius: 12px;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.menu-btn:hover {
+  background: #a1887f;
+  transform: scale(1.05);
+}
