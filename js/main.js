@@ -6,6 +6,7 @@ import { updateEnemy } from './entities/enemy.js';
 import { initInput } from './input.js';
 import { createWaveState, startWave, updateWave, isWaveComplete } from './systems/wave.js';
 import { updateCombat, updateParticles } from './systems/combat.js';
+import { calculateWaveIncome } from './systems/economy.js';
 
 // --- Game State ---
 const game = {
@@ -183,7 +184,7 @@ function showEndScreen(title, info) {
 
 function showWaveEndScreen() {
   const survivingBuildings = game.buildings.filter(b => b.alive).length;
-  const income = 30 + survivingBuildings * 10;
+  const income = calculateWaveIncome(game.buildings);
   game.credits += income;
 
   document.getElementById('wave-end-title').textContent = `Wave ${game.currentWave} Complete!`;
