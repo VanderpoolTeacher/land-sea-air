@@ -138,7 +138,7 @@ function initGame() {
 
 // --- HUD ---
 function updateHUD() {
-  document.getElementById('wave-counter').textContent = `Wave ${game.currentWave}/10`;
+  document.getElementById('wave-counter').textContent = `Wave ${game.currentWave + 1}/10`;
   document.getElementById('credits-display').textContent = `Credits: ${game.credits}`;
 }
 
