@@ -203,6 +203,8 @@ export const WAVES = [
 export const STARTING_CREDITS = 100;
 export const BASE_INCOME_PER_WAVE = 30;
 export const BUILDING_INCOME_BONUS = 10; // per surviving building per wave
+export const PASSIVE_INCOME_PER_BUILDING = 2; // credits per building per second during waves
+export const PASSIVE_INCOME_INTERVAL = 1.0; // seconds between passive income ticks
 
 // --- Resource Buildings ---
 export const BUILDING_HP = 100;

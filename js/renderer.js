@@ -74,6 +74,13 @@ export function renderFrame(ctx, game) {
     drawParticle(ctx, p);
   }
 
+  // Draw gold float animations
+  if (game.goldFloats) {
+    for (const gf of game.goldFloats) {
+      drawGoldFloat(ctx, gf);
+    }
+  }
+
   // Lane damage overlay for destroyed buildings
   if (game.state === 'WAVE' || game.state === 'PLACEMENT' || game.state === 'WAVE_END') {
     for (const [key, lane] of Object.entries(LANES)) {
@@ -342,6 +349,30 @@ function drawParticle(ctx, p) {
   ctx.globalAlpha = p.alpha;
   ctx.fill();
   ctx.globalAlpha = 1.0;
+}
+
+// --- Gold float animation ---
+function drawGoldFloat(ctx, gf) {
+  const progress = gf.age / gf.maxAge;
+  // Fade out in the last 40%
+  const alpha = progress > 0.6 ? 1 - (progress - 0.6) / 0.4 : 1;
+  // Scale: pop in then shrink slightly
+  const scale = progress < 0.15 ? 0.5 + progress / 0.15 * 0.5 : 1;
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(gf.x, gf.y);
+  ctx.scale(scale, scale);
+  ctx.font = 'bold 16px Georgia';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  // Gold outline for readability
+  ctx.strokeStyle = '#5a3e00';
+  ctx.lineWidth = 3;
+  ctx.strokeText(gf.text, 0, 0);
+  ctx.fillStyle = COLORS.creditGold;
+  ctx.fillText(gf.text, 0, 0);
+  ctx.restore();
 }
 
 // --- Health bar ---

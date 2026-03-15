@@ -1,4 +1,4 @@
-import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, STATES, STARTING_CREDITS, COSTS, WAVES } from './config.js';
+import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, STATES, STARTING_CREDITS, COSTS, WAVES, PASSIVE_INCOME_PER_BUILDING, PASSIVE_INCOME_INTERVAL } from './config.js';
 import { createMap } from './map.js';
 import { renderFrame } from './renderer.js';
 import { createTower, upgradeTower, repairTower, getUpgradeCost } from './entities/tower.js';
@@ -26,6 +26,8 @@ const game = {
   towerSlots: [],   // { domain, x, y, locked, tower }
   paths: {},
   selectedSlot: null,
+  goldFloats: [],   // { x, y, text, age, maxAge }
+  incomeTimer: 0,
 };
 
 // --- Canvas Setup ---
@@ -67,6 +69,31 @@ function update(dt) {
 
     updateCombat(dt, game.towers, game.enemies, game.projectiles, game.particles);
     updateParticles(dt, game.particles);
+
+    // Passive income from surviving buildings (every second)
+    game.incomeTimer += dt;
+    if (game.incomeTimer >= PASSIVE_INCOME_INTERVAL) {
+      game.incomeTimer -= PASSIVE_INCOME_INTERVAL;
+      for (const bld of game.buildings) {
+        if (bld.alive) {
+          game.credits += PASSIVE_INCOME_PER_BUILDING;
+          game.goldFloats.push({
+            x: bld.x,
+            y: bld.y - 30,
+            text: `+${PASSIVE_INCOME_PER_BUILDING}`,
+            age: 0,
+            maxAge: 1.2,
+          });
+        }
+      }
+    }
+
+    // Update gold floats
+    for (const gf of game.goldFloats) {
+      gf.age += dt;
+      gf.y -= 25 * dt; // float upward
+    }
+    game.goldFloats = game.goldFloats.filter(gf => gf.age < gf.maxAge);
 
     // Award bounties for dead enemies
     for (const enemy of game.enemies) {
@@ -132,6 +159,8 @@ function initGame() {
   game.credits = STARTING_CREDITS;
   game.currentWave = 0;
   game.selectedSlot = null;
+  game.goldFloats = [];
+  game.incomeTimer = 0;
   game.waveState = createWaveState();
   game.state = STATES.PLACEMENT;
   document.getElementById('start-wave-btn').style.display = '';
