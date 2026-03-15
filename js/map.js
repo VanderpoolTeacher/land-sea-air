@@ -62,6 +62,8 @@ export function createMap() {
 
   const buildings = [
     buildBuilding(LANES.land.y, 'land'),
+    // Extra resource building behind the land base
+    { domain: 'land', x: LANE_MARGIN_LEFT + 40, y: LANES.land.y + LANE_HEIGHT - 30, hp: BUILDING_HP, maxHp: BUILDING_HP, alive: true },
     buildBuilding(LANES.sea.y, 'sea'),
     buildBuilding(LANES.air.y, 'air'),
   ];

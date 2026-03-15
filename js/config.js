@@ -187,7 +187,7 @@ export const ENEMY_TYPES = {
 // --- Wave Data ---
 // Each wave: { infantry, patrolBoat, drone, hpMod, spawnRate, speedMod }
 export const WAVES = [
-  { infantry: 5, patrolBoat: 0, drone: 0, hpMod: 1.0, spawnRate: 2.5, speedMod: 0.7 },
+  { infantry: 1, patrolBoat: 0, drone: 0, hpMod: 1.0, spawnRate: 2.5, speedMod: 0.7 },
   { infantry: 0, patrolBoat: 5, drone: 0, hpMod: 1.0, spawnRate: 1.5, speedMod: 1.0 },
   { infantry: 0, patrolBoat: 0, drone: 5, hpMod: 1.0, spawnRate: 1.5, speedMod: 1.0 },
   { infantry: 3, patrolBoat: 3, drone: 2, hpMod: 1.0, spawnRate: 1.5, speedMod: 1.0 },
