@@ -171,6 +171,13 @@ body {
   transition: background 0.2s, transform 0.1s;
 }
 
+#version {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #8d7b6e;
+  letter-spacing: 1px;
+}
+
 .menu-btn:hover {
   background: #a1887f;
   transform: scale(1.05);
