@@ -49,26 +49,26 @@ export const LANE_MARGIN_LEFT = 20;
 export const LANE_WIDTH = VIRTUAL_WIDTH - 40;
 
 export const LANES = {
+  air: {
+    domain: 'air',
+    y: LANE_MARGIN_TOP,
+    label: 'AIR',
+    bgColor: COLORS.airBg,
+    borderColor: COLORS.airBorder,
+  },
   land: {
     domain: 'land',
-    y: LANE_MARGIN_TOP,
+    y: LANE_MARGIN_TOP + LANE_HEIGHT + LANE_GAP,
     label: 'LAND',
     bgColor: COLORS.landBg,
     borderColor: COLORS.landBorder,
   },
   sea: {
     domain: 'sea',
-    y: LANE_MARGIN_TOP + LANE_HEIGHT + LANE_GAP,
+    y: LANE_MARGIN_TOP + (LANE_HEIGHT + LANE_GAP) * 2,
     label: 'SEA',
     bgColor: COLORS.seaBg,
     borderColor: COLORS.seaBorder,
-  },
-  air: {
-    domain: 'air',
-    y: LANE_MARGIN_TOP + (LANE_HEIGHT + LANE_GAP) * 2,
-    label: 'AIR',
-    bgColor: COLORS.airBg,
-    borderColor: COLORS.airBorder,
   },
 };
 
@@ -187,7 +187,7 @@ export const ENEMY_TYPES = {
 // --- Wave Data ---
 // Each wave: { infantry, patrolBoat, drone, hpMod, spawnRate, speedMod }
 export const WAVES = [
-  { infantry: 5, patrolBoat: 0, drone: 0, hpMod: 1.0, spawnRate: 1.5, speedMod: 1.0 },
+  { infantry: 5, patrolBoat: 0, drone: 0, hpMod: 1.0, spawnRate: 2.5, speedMod: 0.7 },
   { infantry: 0, patrolBoat: 5, drone: 0, hpMod: 1.0, spawnRate: 1.5, speedMod: 1.0 },
   { infantry: 0, patrolBoat: 0, drone: 5, hpMod: 1.0, spawnRate: 1.5, speedMod: 1.0 },
   { infantry: 3, patrolBoat: 3, drone: 2, hpMod: 1.0, spawnRate: 1.5, speedMod: 1.0 },

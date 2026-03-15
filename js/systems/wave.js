@@ -72,7 +72,8 @@ export function updateWave(waveState, dt, paths, enemies, hpMod, speedMod, spawn
       const path = paths[entry.domain];
       const enemy = createEnemy(entry.typeKey, path, hpMod, speedMod);
       enemies.push(enemy);
-      waveState.spawnTimer = spawnRate;
+      // Randomize spacing: ±40% of base spawn rate
+      waveState.spawnTimer = spawnRate * (0.6 + Math.random() * 0.8);
     }
   }
 
