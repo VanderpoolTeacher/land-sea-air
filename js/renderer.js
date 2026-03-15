@@ -37,6 +37,13 @@ export function renderFrame(ctx, game) {
     }
   }
 
+  // Draw walls (in front of buildings)
+  if (game.walls) {
+    for (const wall of game.walls) {
+      drawWall(ctx, wall);
+    }
+  }
+
   // Draw resource buildings
   for (const bld of game.buildings) {
     drawBuilding(ctx, bld);
@@ -153,6 +160,44 @@ function drawBuilding(ctx, bld) {
     ctx.fillStyle = '#999';
     ctx.globalAlpha = 0.5;
     roundedRect(ctx, bld.x - size / 2, bld.y - size / 4, size, size / 2, 4);
+    ctx.fill();
+    ctx.globalAlpha = 1.0;
+  }
+}
+
+// --- Wall (protective barrier) ---
+function drawWall(ctx, wall) {
+  const w = 12;
+  const h = 50;
+  if (wall.alive) {
+    // Brick wall rectangle
+    roundedRect(ctx, wall.x - w / 2, wall.y - h / 2, w, h, 3);
+    ctx.fillStyle = '#a0522d';
+    ctx.fill();
+    ctx.strokeStyle = '#6b3410';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Brick lines
+    ctx.strokeStyle = '#6b3410';
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.5;
+    for (let i = 1; i < 4; i++) {
+      const ly = wall.y - h / 2 + i * (h / 4);
+      ctx.beginPath();
+      ctx.moveTo(wall.x - w / 2, ly);
+      ctx.lineTo(wall.x + w / 2, ly);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1.0;
+
+    // HP bar
+    drawHealthBar(ctx, wall.x - w, wall.y + h / 2 + 4, w * 2, 4, wall.hp, wall.maxHp);
+  } else {
+    // Rubble
+    ctx.fillStyle = '#8b5e3c';
+    ctx.globalAlpha = 0.3;
+    roundedRect(ctx, wall.x - w / 2, wall.y - 4, w, 8, 2);
     ctx.fill();
     ctx.globalAlpha = 1.0;
   }

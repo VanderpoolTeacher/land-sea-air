@@ -22,6 +22,7 @@ const game = {
   credits: 0,
   currentWave: 0,
   buildings: [],    // { domain, hp, maxHp, x, y }
+  walls: [],        // { domain, hp, maxHp, x, y }
   towerSlots: [],   // { domain, x, y, locked, tower }
   paths: {},
   selectedSlot: null,
@@ -61,7 +62,7 @@ function update(dt) {
     updateWave(game.waveState, dt, game.paths, game.enemies, wave.hpMod, wave.speedMod, wave.spawnRate);
 
     for (const enemy of game.enemies) {
-      updateEnemy(enemy, dt, game.towers, game.buildings);
+      updateEnemy(enemy, dt, game.towers, game.buildings, game.walls);
     }
 
     updateCombat(dt, game.towers, game.enemies, game.projectiles, game.particles);
@@ -123,6 +124,7 @@ function initGame() {
   game.paths = mapData.paths;
   game.towerSlots = mapData.towerSlots;
   game.buildings = mapData.buildings;
+  game.walls = mapData.walls;
   game.towers = [];
   game.enemies = [];
   game.projectiles = [];

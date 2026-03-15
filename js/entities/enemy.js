@@ -32,7 +32,7 @@ export function createEnemy(typeKey, path, hpMod, speedMod) {
   };
 }
 
-export function updateEnemy(enemy, dt, towers, buildings) {
+export function updateEnemy(enemy, dt, towers, buildings, walls) {
   if (!enemy.alive) return;
 
   // If attacking a tower, stay and deal damage
@@ -50,11 +50,23 @@ export function updateEnemy(enemy, dt, towers, buildings) {
     }
   }
 
-  // If attacking a building, stay and deal damage
+  // If attacking a building or wall, stay and deal damage
   if (enemy.attackingBuilding) {
     const bld = enemy.attackingBuilding;
     if (!bld.alive) {
       enemy.attackingBuilding = null;
+      // Retarget: try wall first, then building
+      const wall = walls && walls.find(w => w.domain === enemy.domain && w.alive);
+      if (wall) {
+        enemy.attackingBuilding = wall;
+        enemy.attackCooldown = 0;
+      } else {
+        const nextBld = buildings.find(b => b.domain === enemy.domain && b.alive);
+        if (nextBld) {
+          enemy.attackingBuilding = nextBld;
+          enemy.attackCooldown = 0;
+        }
+      }
       return;
     }
     enemy.attackCooldown -= dt;
@@ -72,10 +84,17 @@ export function updateEnemy(enemy, dt, towers, buildings) {
   // Move toward next waypoint
   if (enemy.waypointIndex >= enemy.path.length) {
     enemy.reachedEnd = true;
-    const bld = buildings.find(b => b.domain === enemy.domain && b.alive);
-    if (bld) {
-      enemy.attackingBuilding = bld;
+    // Attack wall first, then buildings
+    const wall = walls && walls.find(w => w.domain === enemy.domain && w.alive);
+    if (wall) {
+      enemy.attackingBuilding = wall;
       enemy.attackCooldown = 0;
+    } else {
+      const bld = buildings.find(b => b.domain === enemy.domain && b.alive);
+      if (bld) {
+        enemy.attackingBuilding = bld;
+        enemy.attackCooldown = 0;
+      }
     }
     return;
   }

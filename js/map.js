@@ -1,6 +1,6 @@
 import {
   LANES, LANE_HEIGHT, LANE_MARGIN_LEFT, LANE_WIDTH,
-  BUILDING_HP,
+  BUILDING_HP, WALL_HP,
 } from './config.js';
 
 // Path waypoints per lane (virtual coords).
@@ -47,6 +47,19 @@ function buildBuilding(laneY, domain) {
   };
 }
 
+// Wall position (just to the right of the building, on the path)
+function buildWall(laneY, domain) {
+  const midY = laneY + LANE_HEIGHT / 2;
+  return {
+    domain,
+    x: LANE_MARGIN_LEFT + 90,
+    y: midY,
+    hp: WALL_HP,
+    maxHp: WALL_HP,
+    alive: true,
+  };
+}
+
 export function createMap() {
   const paths = {
     land: buildPath(LANES.land.y),
@@ -68,5 +81,11 @@ export function createMap() {
     buildBuilding(LANES.air.y, 'air'),
   ];
 
-  return { paths, towerSlots, buildings };
+  const walls = [
+    buildWall(LANES.land.y, 'land'),
+    buildWall(LANES.sea.y, 'sea'),
+    buildWall(LANES.air.y, 'air'),
+  ];
+
+  return { paths, towerSlots, buildings, walls };
 }

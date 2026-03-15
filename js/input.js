@@ -16,7 +16,7 @@ function hitTest(vx, vy, obj, size = 20) {
 
 export function initInput(game, callbacks) {
   game.canvas.addEventListener('click', (e) => {
-    if (game.state !== STATES.PLACEMENT) return;
+    if (game.state !== STATES.PLACEMENT && game.state !== STATES.WAVE) return;
 
     const { x, y } = toVirtual(game, e);
 

@@ -206,6 +206,7 @@ export const BUILDING_INCOME_BONUS = 10; // per surviving building per wave
 
 // --- Resource Buildings ---
 export const BUILDING_HP = 100;
+export const WALL_HP = 80;
 
 // --- Game States ---
 export const STATES = {
